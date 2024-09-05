@@ -1,0 +1,41 @@
+<h1 class="text-2xl font-bold mb-4">Task Details</h1>
+
+<p><strong>Title:</strong> <%= @task.title %></p>
+<p><strong>Description:</strong> <%= @task.description %></p>
+<p><strong>Status:</strong> <%= @task.status %></p>
+<p><strong>Assigned to:</strong> <%= @task.user.email %></p>
+
+<div class="mt-4">
+  <%= link_to 'Edit Task', edit_task_path(@task), class: 'text-blue-500 hover:underline' %>
+  <%= link_to 'Back to Tasks', tasks_path, class: 'text-blue-500 hover:underline ml-4' %>
+</div>
+
+<% if current_user.admin?%>
+  <h2 class="text-xl font-bold mt-8">Comments</h2>
+  <ul class="mt-4">
+    <% if @task.comments.any? %>
+      <% @task.comments.each do |comment| %>
+        <li class="mb-2 p-4 bg-gray-100 rounded-md shadow-md">
+          <strong><%= comment.user.email %>:</strong>
+          <p class="mt-1"><%= comment.body.presence || "No comment" %></p>
+          <div class="mt-2 flex items-center space-x-2">           
+            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: "bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded" %>
+          </div>
+        </li>
+      <% end %>
+    <% else %>
+      <p>No comments available for this task.</p>
+    <% end %>
+  </ul>
+<% end %>
+
+<% if current_user == @task.user %>
+  <h2 class="text-xl font-bold mt-8">Add a Comment</h2>
+  <%= form_with(model: [@task, @comment], local: true) do |form| %>
+    <div class="mb-4">
+      <%= form.label :body, class: 'block text-gray-700' %>
+      <%= form.text_area :body, class: "w-full mt-1 p-2 border border-gray-300 rounded-md", placeholder: "Write a comment..." %>
+    </div>
+    <%= form.submit 'Add Comment', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+  <% end %>
+<% end %>

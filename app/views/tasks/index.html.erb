@@ -1,0 +1,76 @@
+<% if current_user.admin? %>
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-2xl font-bold mb-4">All Tasks</h1>
+    <%= link_to 'New Task', new_task_path, class: 'bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300' %>
+  </div>
+
+  <table class="min-w-full mt-4">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>User</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @tasks.each do |task| %>
+        <tr>
+          <td><%= task.title %></td>
+          <td><%= task.description %></td>
+          <td><%= task.status %></td>
+          <td><%= task.user.present? ? task.user.email : 'Unassigned' %></td>
+          <td>
+            <%= link_to 'Edit', edit_task_path(task), class: 'text-blue-500 hover:underline' %> |
+            <%= link_to 'Show', task_path(task), class: 'text-blue-500 hover:underline' %>
+          </td>
+          <td>
+            <%= button_to 'Delete', task, method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-red-500 hover:underline' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <h2 class="text-2xl font-bold mt-8">Users</h2>
+  <ul>
+    <% @users.each do |user| %>
+      <li><%= user.email %> - <%= user.role %></li>
+    <% end %>
+  </ul>
+
+<% else %>
+  <h1 class="text-2xl font-bold mb-4">My Tasks</h1>
+  <table class="min-w-full mt-4">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+        <th>Status</th>
+        <th>Actions</th>
+        <th>Comments</th> 
+      </tr>
+    </thead>
+    <tbody>
+      <% @tasks.each do |task| %>
+        <tr>
+          <td><%= task.title %></td>
+          <td><%= task.description %></td>
+          <td><%= task.status %></td>
+          <td>
+            <%= button_to 'Mark as Complete', task_path(task, task: { status: 'complete' }), method: :patch, class: 'text-green-500 hover:underline' if task.status == 'pending' %>
+            <%= button_to 'Mark as Pending', task_path(task, task: { status: 'pending' }), method: :patch, class: 'text-yellow-500 hover:underline' if task.status == 'complete' %>
+          </td>
+          <td>
+            <% if task == current_user.tasks.find_by(id: task.id) %>
+              <%= link_to 'Add Comment', new_task_comment_path(task_id: task.id), class: 'text-blue-500 hover:underline' %>
+            <% else %>
+              No Comment Option
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

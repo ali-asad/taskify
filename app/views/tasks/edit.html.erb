@@ -1,0 +1,24 @@
+<h1 class="text-2xl font-bold mb-4">Edit Task</h1>
+
+<%= form_with(model: @task, local: true) do |form| %>
+  <div class="mb-4">
+    <%= form.label :title %>
+    <%= form.text_field :title, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :description, class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.text_area :description, class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.label :user_id, "Assign to", class: "block text-gray-700 text-sm font-bold mb-2" %>
+    <%= form.collection_select :user_id, User.where.not(id: current_user.id), :id, :email, prompt: "Select a user", class: "shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+  </div>
+
+  <div class="mb-4">
+    <%= form.submit "Update Task", class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+  </div>
+<% end %>
+
+<%= link_to 'Back', tasks_path, class: "text-blue-500 hover:underline" %>
