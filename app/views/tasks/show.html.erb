@@ -10,7 +10,7 @@
   <%= link_to 'Back to Tasks', tasks_path, class: 'text-blue-500 hover:underline ml-4' %>
 </div>
 
-<% if current_user.admin?%>
+
   <h2 class="text-xl font-bold mt-8">Comments</h2>
   <ul class="mt-4">
     <% if @task.comments.any? %>
@@ -18,8 +18,13 @@
         <li class="mb-2 p-4 bg-gray-100 rounded-md shadow-md">
           <strong><%= comment.user.email %>:</strong>
           <p class="mt-1"><%= comment.body.presence || "No comment" %></p>
-          <div class="mt-2 flex items-center space-x-2">           
+          <div class="mt-2 flex items-center space-x-2"> 
+          <% if current_user.admin? %>          
             <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: "bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded" %>
+            <% else %>
+            <%= link_to 'Edit', edit_task_comment_path(@task, comment), class: 'bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
+            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
+            <% end %>
           </div>
         </li>
       <% end %>
@@ -27,7 +32,6 @@
       <p>No comments available for this task.</p>
     <% end %>
   </ul>
-<% end %>
 
 <% if current_user == @task.user %>
   <h2 class="text-xl font-bold mt-8">Add a Comment</h2>

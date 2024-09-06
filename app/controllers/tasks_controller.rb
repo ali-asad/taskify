@@ -12,10 +12,10 @@ class TasksController < ApplicationController
     end
 
     def show
-      @comment = Comment.new
-      # @comments = @task.comments.includes(:user)
-      @comments = current_user.admin? ? @task.comments.includes(:user) : @task.comments.where(user: current_user).includes(:user)
-    end    
+      @task = Task.find(params[:id])
+      @comments = @task.comments.includes(:user)
+      @comment = current_user.comments.find_or_initialize_by(task: @task) if current_user == @task.user
+    end       
   
     def new
       @task = Task.new

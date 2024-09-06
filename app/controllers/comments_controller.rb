@@ -1,8 +1,14 @@
 class CommentsController < ApplicationController
-  before_action :set_task, only: [:new, :create, :edit, :update]
+  before_action :set_task
+  before_action :set_comment, only: [:edit, :update, :destroy]
 
   def new
-    @comment = @task.comments.build
+    if @task.comments.where(user_id: current_user.id).exists?
+      flash[:alert] = "You have already commented on this task."
+      redirect_to task_path(@task)
+    else
+      @comment = @task.comments.new
+    end
   end
 
   def show
@@ -14,10 +20,15 @@ class CommentsController < ApplicationController
   def create
     @comment = @task.comments.build(comment_params)
     @comment.user = current_user
-    if @comment.save
-      redirect_to task_path(@task), notice: 'Comment was successfully created.'
+
+    if @task.comments.where(user_id: current_user.id).exists?
+      flash[:alert] = "You can only add one comment per task."
+      redirect_to task_path(@task)
+    elsif @comment.save
+      flash[:notice] = "Comment added successfully."
+      redirect_to task_path(@task)
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
@@ -26,21 +37,25 @@ class CommentsController < ApplicationController
   end
 
   def update
-    @comment = @task.comments.find(params[:id])
     if @comment.update(comment_params)
-      redirect_to task_path(@task), notice: 'Comment was successfully updated.'
+      flash[:notice] = "Comment updated successfully."
+      redirect_to task_path(@task)
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    @comment = Comment.find(params[:id])
     @comment.destroy
-    redirect_to task_path(@comment.task), notice: 'Comment was successfully deleted.'
+    flash[:notice] = "Comment deleted successfully."
+    redirect_to task_path(@task)
   end
 
   private
+
+  def set_comment
+    @comment = @task.comments.find(params[:id])
+  end
 
   def set_task
     @task = Task.find(params[:task_id])
