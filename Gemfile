@@ -75,4 +75,3 @@ group :test do
 end
 
 gem 'devise'
-gem 'turbo-rails'
