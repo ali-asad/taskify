@@ -1,10 +1,11 @@
 <% if current_user.admin? %>
+<h1 class="text-2xl inline bg-indigo-50 font-bold italic text-red-500 mb-4">Admin Profile</h1>
   <div class="flex justify-between items-center mb-4">
     <h1 class="text-2xl font-bold mb-4">All Tasks</h1>
     <%= link_to 'New Task', new_task_path, class: 'bg-blue-500 text-white font-bold py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300' %>
   </div>
 
-  <table class="min-w-full mt-4">
+  <table class="min-w-full divide-y divide-gray-200">
     <thead>
       <tr>
         <th>Title</th>
@@ -14,7 +15,7 @@
         <th>Actions</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="min-w-full bg-white divide-y divide-gray-200">
       <% @tasks.each do |task| %>
         <tr>
           <td><%= task.title %></td>
@@ -36,13 +37,13 @@
   <h2 class="text-2xl font-bold mt-8">Users</h2>
   <ul>
     <% @users.each do |user| %>
-      <li><%= user.email %> - <%= user.role %></li>
+      <li class="min-w-full bg-white divide-y divide-gray-200"><%= user.email %> - <%= user.role %></li>
     <% end %>
   </ul>
 
 <% else %>
   <h1 class="text-2xl font-bold mb-4">My Tasks</h1>
-  <table class="min-w-full mt-4">
+  <table class="min-w-full bg-white divide-y divide-gray-200">
     <thead>
       <tr>
         <th>Title</th>
@@ -52,7 +53,7 @@
         <th>Comments</th> 
       </tr>
     </thead>
-    <tbody>
+    <tbody class="min-w-full bg-white divide-y divide-gray-200">
       <% @tasks.each do |task| %>
         <tr>
           <td><%= task.title %></td>
@@ -66,13 +67,10 @@
           <% user_comment = task.comments.find_by(user_id: current_user.id) %>
 
           <% if user_comment.present? %>
-             <%= link_to 'Show', task_path(task), class: 'text-blue-500 hover:underline' %> | 
-            <%= link_to 'Add Comment', new_task_comment_path(task_id: task.id), class: 'text-blue-500 hover:underline' %>
-
-
+             <%= link_to 'Show Comment', task_path(task), class: 'text-blue-500 hover:underline' %>
           </td>
           <% else %>
-            <%= link_to 'Add Comment', new_task_comment_path(task_id: task.id), class: 'text-blue-500 hover:underline' %>
+            <%= link_to 'Add Comment', task_path(task), class: 'text-blue-500 hover:underline' %>
           <% end %>
           </td>
         </tr>

@@ -34,6 +34,7 @@ class TasksController < ApplicationController
     def edit
     end
 
+
     def update
       if task_params[:user_id]
         @task.comments.destroy_all if task_params[:user_id] && task_params[:user_id] != @task.user_id

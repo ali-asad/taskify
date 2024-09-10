@@ -18,28 +18,24 @@
         <li class="mb-2 p-4 bg-gray-100 rounded-md shadow-md">
           <strong><%= comment.user.email %>:</strong>
           <p class="mt-1"><%= comment.body.presence || "No comment" %></p>
+          <% if comment.image.attached? %>
+          <%= image_tag comment.thumbnail, class: "mt-2 max-w-full h-auto" %>
+        <% end %>
           <div class="mt-2 flex items-center space-x-2"> 
           <% if current_user.admin? %>          
-            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: "bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded" %>
+            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: "text-white font-bold bg-gray-400 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded" %>
             <% else %>
-            <%= link_to 'Edit', edit_task_comment_path(@task, comment), class: 'bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
-            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'bg-blue-500 text-white font-bold bg-gray-200 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
+            <%= link_to 'Edit', edit_task_comment_path(@task, comment), class: 'text-white font-bold bg-gray-400 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
+            <%= button_to 'Delete', task_comment_path(@task, comment), method: :delete, data: { confirm: 'Are you sure?' }, class: 'text-white font-bold bg-gray-400 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-300 rounded' %>
             <% end %>
           </div>
         </li>
       <% end %>
     <% else %>
-      <p>No comments available for this task.</p>
+    <% if current_user.admin? %>
+    <p>No comments available for this task.</p>
+    <% else %>
+    <%= render partial: 'comments/form', locals: { task: @task } %>
+    <% end %>
     <% end %>
   </ul>
-
-<% if current_user == @task.user %>
-  <h2 class="text-xl font-bold mt-8">Add a Comment</h2>
-  <%= form_with(model: [@task, @comment], local: true) do |form| %>
-    <div class="mb-4">
-      <%= form.label :body, class: 'block text-gray-700' %>
-      <%= form.text_area :body, class: "w-full mt-1 p-2 border border-gray-300 rounded-md", placeholder: "Write a comment..." %>
-    </div>
-    <%= form.submit 'Add Comment', class: "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
-  <% end %>
-<% end %>
