@@ -51,6 +51,31 @@ class CommentsController < ApplicationController
     redirect_to task_path(@task)
   end
 
+
+  def approve
+    @comment = @task.comments.find_by(id: params[:id])
+    
+    if @comment
+      @comment.update(status: 'approved')
+      redirect_to @task, notice: 'Comment approved.'
+    else
+      redirect_to @task, alert: 'Comment not found.'
+    end
+  end
+  
+  def reject
+    @comment = @task.comments.find_by(id: params[:id])
+    
+    if @comment
+      @comment.update(status: 'rejected')
+      redirect_to @task, notice: 'Comment rejected.'
+    else
+      redirect_to @task, alert: 'Comment not found.'
+    end
+  end
+
+  
+
   private
 
   def set_comment

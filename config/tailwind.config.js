@@ -15,6 +15,10 @@ module.exports = {
       backgroundImage: {
         'custom-background': "url('/assets/background.jpg')",
       },
+      colors: {
+        'custom-green': '#32CD32', // Light green
+        'custom-pink': '#FF1493'   // Deep pink
+      },
     },
   },
   plugins: [

@@ -2,7 +2,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :tasks do
-    resources :comments, only: [:new, :create, :update, :destroy, :edit, :show]
+    resources :comments do
+      patch :approve, on: :member
+      patch :reject, on: :member
+    end
   end
 
   # get 'tasks/:task_id/comments/new', to: 'comments#new', as: :new_task_comment

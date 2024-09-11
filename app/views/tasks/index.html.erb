@@ -12,6 +12,7 @@
         <th>Description</th>
         <th>Status</th>
         <th>User</th>
+        <th>Priority</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -22,6 +23,7 @@
           <td><%= task.description %></td>
           <td><%= task.status %></td>
           <td><%= task.user.present? ? task.user.email : 'Unassigned' %></td>
+          <td><%= task.priority%></td>
           <td>
             <%= link_to 'Edit', edit_task_path(task), class: 'text-blue-500 hover:underline' %> |
             <%= link_to 'Show', task_path(task), class: 'text-blue-500 hover:underline' %>

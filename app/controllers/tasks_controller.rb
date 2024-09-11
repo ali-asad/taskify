@@ -23,6 +23,7 @@ class TasksController < ApplicationController
   
     def create
       @task = Task.new(task_params)
+      @task.priority = 'low'
       
       if @task.save
         redirect_to tasks_path, notice: "Task was successfully created."
@@ -60,7 +61,7 @@ class TasksController < ApplicationController
     end
   
     def task_params
-      params.require(:task).permit(:title, :description, :status, :user_id)
+      params.require(:task).permit(:title, :description, :status, :user_id, :priority)
     end
   end
   

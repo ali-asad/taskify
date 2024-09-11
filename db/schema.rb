@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2024_09_10_114753) do
+ActiveRecord::Schema[7.0].define(version: 2024_09_11_064419) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -45,6 +45,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_10_114753) do
     t.integer "task_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "status"
     t.index ["task_id"], name: "index_comments_on_task_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
@@ -56,6 +57,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_09_10_114753) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "priority"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end
 
